@@ -1,0 +1,8 @@
+#屏蔽当前目录下的所有文件
+/*
+#追踪目录/文件
+!LogTrace-Plugin
+!/*.gitignore
+!build.gradle
+!settings.gradle
+!README.org

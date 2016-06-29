@@ -1,0 +1,23 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = [
+                'src/main/groovy',
+                'src/main/java'
+            ]
+        }
+        java {
+            srcDirs = []
+        }
+    }
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+}
