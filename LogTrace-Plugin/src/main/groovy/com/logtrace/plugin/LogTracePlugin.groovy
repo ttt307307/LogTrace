@@ -34,6 +34,9 @@ public class LogTracePlugin implements Plugin<Project> {
 
             project.logtrace.compileJavas.each { compileJava ->
                 println(compileJava)
+                compileJava.doLast {
+                    System.out.println(compileJava.dump() + "===> no aspectj")
+                }
 //                compileJava {
 //                    doLast {
 //                        if (!enabled) {
