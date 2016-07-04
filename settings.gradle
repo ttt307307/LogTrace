@@ -1,4 +1,4 @@
-include ':LogTrace'
+include ':LogTrace', ':logtracedemo-and'
 include ':LogTrace-Plugin'
 include ':LogTraceDemo'
 include ':LogTraceDemo-Remote-Repo'
