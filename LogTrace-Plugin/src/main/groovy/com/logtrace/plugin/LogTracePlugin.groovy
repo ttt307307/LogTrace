@@ -44,14 +44,6 @@ public class LogTracePlugin implements Plugin<Project> {
                     source: project.sourceCompatibility,
                     target: project.targetCompatibility,
             )
-//                    {
-//                sourceroots {
-//                    project.sourceSets.main.java.srcDirs.each {
-//                        pathelement(location:it.absolutePath)
-//                    }
-//
-//                }
-//            }
         }
 
 
@@ -71,7 +63,6 @@ public class LogTracePlugin implements Plugin<Project> {
 //                            project.configurations.aspects.asPath,
 //                            project.sourceSets.main.output.classesDir.absolutePath,
 //                            project.sourceSets.main.runtimeClasspath.asPath
-//                            project.configurations.compile.asPath
                     aspectj project.sourceSets.main.output.classesDir.absolutePath,
                             compileJava.classpath.asPath,
                             compileJava.destinationDir.toString(),
@@ -79,20 +70,23 @@ public class LogTracePlugin implements Plugin<Project> {
                 }
             }
 
-//            project.logtrace.compileTestJavas.each { compileTestJava ->
-//                println compileTestJava
-//                compileTestJava.doLast {
-//                    if (!enabled) {
-//                        System.out.println("===> no aspectj")
-//                        return
-//                    }
+            project.logtrace.compileTestJavas.each { compileJava ->
+                println compileJava
+                compileJava.doLast {
+                    if (!enabled) {
+                        System.out.println("===> no aspectj")
+                        return
+                    }
 //                    aspectj project.sourceSets.test.output.classesDir.absolutePath,
 //                            project.configurations.aspects.asPath + project.jar.archivePath,
 //                            project.sourceSets.test.output.classesDir.absolutePath,
 //                            project.sourceSets.test.runtimeClasspath.asPath
-//                            project.configurations.compile.asPath
-//                }
-//            }
+                    aspectj project.sourceSets.test.output.classesDir.absolutePath,
+                            compileJava.classpath.asPath,
+                            compileJava.destinationDir.toString(),
+                            compileJava.classpath.asPath
+                }
+            }
         }
     }
 }
