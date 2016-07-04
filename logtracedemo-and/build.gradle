@@ -2,25 +2,61 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'logtrace'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+logtrace {
+    enabled = false
+}
 
 buildscript {
     repositories {
         jcenter()
-        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
+        mavenCentral()
+    }
+    repositories {
+        flatDir {
+            name 'localRepository'
+        }
+    }
+    repositories {
+        localRepository {
+            dirs '../local-repo'
+        }
     }
     dependencies {
         classpath group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
     }
 }
-
 allprojects {
     repositories {
         jcenter()
-        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
+        flatDir {
+            name 'localRepository'
+        }
+        localRepository {
+            dirs '../local-repo'
+        }
     }
 }
+
+//buildscript {
+//    repositories {
+//        jcenter()
+//        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
+//    }
+//    dependencies {
+//        classpath group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+//    }
+//}
+//
+//allprojects {
+//    repositories {
+//        jcenter()
+//        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
+//    }
+//}
 
 android {
     compileSdkVersion 23
@@ -48,5 +84,5 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
-    compile group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+    compile(group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT')
 }
