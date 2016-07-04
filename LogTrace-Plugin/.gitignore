@@ -5,4 +5,5 @@
 !src
 !/*.gitignore
 !build.gradle
+!deploy.gradle
 !README.org
