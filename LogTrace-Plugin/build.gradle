@@ -1,23 +1,109 @@
+apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
+group = "com.logtrace"
+version = "1.0-SNAPSHOT"
 
 sourceSets {
     main {
         groovy {
             srcDirs = [
-                'src/main/groovy',
-                'src/main/java'
+                'src/main/groovy'
             ]
         }
         java {
-            srcDirs = []
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/junit/java','src/testng/java']
+        }
+        resources {
+            srcDirs = ['src/junit/resources']
         }
     }
 }
 
+configurations {
+    ajc
+    ajtools
+    aspects
+    ajInpath
+    aspectpath
+    compile {
+        extendsFrom aspects
+    }
+}
+
 dependencies {
+    ajc "org.aspectj:aspectjtools:1.8.9"
+    compile "org.aspectj:aspectjweaver:1.8.9"
+    ajtools "org.aspectj:aspectjtools:1.8.9"
+    compile "org.aspectj:aspectjrt:1.8.9"
+    compile "org.aspectj:aspectjtools:1.8.9"
+
     compile gradleApi()
     compile localGroovy()
-    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
+}
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+
+task testNG(type: Test) {
+    //srcDirs ['src/testng/java']
+    useTestNG() {
+        suites 'src/testng/config/testng.xml'
+    }
+    reports.html.destination = file("$buildDir/reports/testng")
+}
+
+test {
+    dependsOn testNG
+    reports.html.destination = file("$buildDir/reports/junit")
+    //srcDirs ['src/junit/java']
+}
+
+
+uploadArchives {
+    repositories { flatDir { name 'localRepository' } }
+    repositories { localRepository { dirs '../local-repo' } }
+}
+
+def aspectj = { destDir, aspectPath, inpath, classpath ->
+    ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+            classpath: configurations.ajc.asPath)
+
+    ant.iajc(
+            encoding: 'UTF-8',
+            maxmem: "1024m", fork: "true", Xlint: "ignore",
+            destDir: destDir,
+            aspectPath: aspectPath,
+            inpath: inpath,
+            classpath: classpath,
+            source: project.sourceCompatibility,
+            target: project.targetCompatibility,
+    )
+}
+
+compileJava {
+    doLast {
+        aspectj project.sourceSets.main.output.classesDir.absolutePath,
+                configurations.aspects.asPath,
+                project.sourceSets.main.output.classesDir.absolutePath,
+                project.sourceSets.main.runtimeClasspath.asPath
+    }
+}
+
+compileTestJava {
+    dependsOn jar
+
+    doLast {
+        aspectj project.sourceSets.test.output.classesDir.absolutePath,
+                configurations.aspects.asPath + jar.archivePath,
+                project.sourceSets.test.output.classesDir.absolutePath,
+                project.sourceSets.test.runtimeClasspath.asPath
+    }
 }

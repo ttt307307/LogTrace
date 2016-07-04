@@ -2,6 +2,7 @@
 /*
 #追踪目录/文件
 !LogTrace-Plugin
+!LogTraceDemo
 !/*.gitignore
 !build.gradle
 !settings.gradle

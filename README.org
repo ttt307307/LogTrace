@@ -1,0 +1,33 @@
+#+TITLE:README.org
+
+* 介绍
+LogTrace插件，用java切入log
+
+* 工程目录
++ [[./LogTrace-Plugin][LogTrace-Plugin]]
++ [[./LogTraceDemo][./LogTraceDemo]]
+
+
+* 用法
+#+BEGIN_SRC build.gradle
+apply plugin: 'logtrace'
+
+buildscript {
+    dependencies {
+        classpath group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+    }
+}
+
+dependencies {
+    compile group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+logtrace {
+    enabled = true
+    compileJavas = [compileJava]
+    compileTestJavas = [compileJava, compileTestJava]
+}
+#+END_SRC
