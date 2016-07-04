@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 @Aspect
 public class LogTraceAjc {
-	private static final String POINTCUT_METHOD = "execution(@com.aspectj.annotation.LogTraceAjc * *(..))";
-    private static final String POINTCUT_CONSTRUCTOR = "execution(@com.aspectj.annotation.LogTraceAjc *.new(..))";
+	private static final String POINTCUT_METHOD = "execution(@com.logtrace.annotation.LogTrace * *(..))";
+    private static final String POINTCUT_CONSTRUCTOR = "execution(@com.logtrace.annotation.LogTrace *.new(..))";
 
 
     @Pointcut(POINTCUT_METHOD)
@@ -166,6 +166,7 @@ public class LogTraceAjc {
 	}
 	
 	private static void log(int level,String message) {
+        System.out.println("level:" + level + ", message：" + message);
 		switch (level) {
 		case 1:
 

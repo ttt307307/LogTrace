@@ -12,11 +12,29 @@ public class LogTracePlugin implements Plugin<Project> {
     void apply(Project project) {
         project.extensions.create("logtrace", LogTraceExtension)
 
-        def aspectj = { destDir, aspectPath, inpath, classpath ->
-            ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
-                    classpath: configurations.ajc.asPath)
+        project.configurations {
+            ajc
+            ajtools
+            aspects
+            ajInpath
+            aspectpath
+            compile {
+                extendsFrom aspects
+            }
+        }
 
-            ant.iajc(
+        project.dependencies {
+            ajc "org.aspectj:aspectjtools:1.8.9"
+            compile "org.aspectj:aspectjweaver:1.8.9"
+            ajtools "org.aspectj:aspectjtools:1.8.9"
+            compile "org.aspectj:aspectjrt:1.8.9"
+        }
+
+        def aspectj = { destDir, aspectPath, inpath, classpath ->
+            project.ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+                    classpath: project.configurations.ajc.asPath)
+
+            project.ant.iajc(
                     encoding: 'UTF-8',
                     maxmem: "1024m", fork: "true", Xlint: "ignore",
                     destDir: destDir,
@@ -26,7 +44,17 @@ public class LogTracePlugin implements Plugin<Project> {
                     source: project.sourceCompatibility,
                     target: project.targetCompatibility,
             )
+//                    {
+//                sourceroots {
+//                    project.sourceSets.main.java.srcDirs.each {
+//                        pathelement(location:it.absolutePath)
+//                    }
+//
+//                }
+//            }
         }
+
+
 
         project.afterEvaluate {
             def enabled = project.logtrace.enabled
@@ -35,39 +63,36 @@ public class LogTracePlugin implements Plugin<Project> {
             project.logtrace.compileJavas.each { compileJava ->
                 println(compileJava)
                 compileJava.doLast {
-                    System.out.println(compileJava.dump() + "===> no aspectj")
+                    if (!enabled) {
+                        System.out.println("===> no aspectj")
+                        return
+                    }
+//                    aspectj project.sourceSets.main.output.classesDir.absolutePath,
+//                            project.configurations.aspects.asPath,
+//                            project.sourceSets.main.output.classesDir.absolutePath,
+//                            project.sourceSets.main.runtimeClasspath.asPath
+//                            project.configurations.compile.asPath
+                    aspectj project.sourceSets.main.output.classesDir.absolutePath,
+                            compileJava.classpath.asPath,
+                            compileJava.destinationDir.toString(),
+                            compileJava.classpath.asPath
                 }
-//                compileJava {
-//                    doLast {
-//                        if (!enabled) {
-//                            System.out.println(compileJava.dump() + "===> no aspectj")
-//                            return
-//                        }
-//                        aspectj project.sourceSets.main.output.classesDir.absolutePath,
-//                                configurations.aspects.asPath,
-//                                project.sourceSets.main.output.classesDir.absolutePath,
-//                                project.sourceSets.main.runtimeClasspath.asPath
-//                    }
-//                }
             }
 
-            project.logtrace.compileTestJavas.each { compileTestJava ->
-                println compileTestJava
-//                compileTestJava {
-//                    dependsOn jar
-//
-//                    doLast {
-//                        if (!enabled) {
-//                            System.out.println(compileTestJava.dump() + "===> no aspectj")
-//                            return
-//                        }
-//                        aspectj project.sourceSets.test.output.classesDir.absolutePath,
-//                                configurations.aspects.asPath + jar.archivePath,
-//                                project.sourceSets.test.output.classesDir.absolutePath,
-//                                project.sourceSets.test.runtimeClasspath.asPath
+//            project.logtrace.compileTestJavas.each { compileTestJava ->
+//                println compileTestJava
+//                compileTestJava.doLast {
+//                    if (!enabled) {
+//                        System.out.println("===> no aspectj")
+//                        return
 //                    }
+//                    aspectj project.sourceSets.test.output.classesDir.absolutePath,
+//                            project.configurations.aspects.asPath + project.jar.archivePath,
+//                            project.sourceSets.test.output.classesDir.absolutePath,
+//                            project.sourceSets.test.runtimeClasspath.asPath
+//                            project.configurations.compile.asPath
 //                }
-            }
+//            }
         }
     }
 }
