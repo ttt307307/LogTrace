@@ -5,10 +5,13 @@ LogTrace插件，用java切入log
 
 * 工程目录
 + [[./LogTrace-Plugin][LogTrace-Plugin]]
-+ [[./LogTraceDemo][./LogTraceDemo]]
++ [[./LogTraceDemo][LogTraceDemo]]
++ [[./LogTraceDemo-Remote-Repo][LogTraceDemo-Remote-Repo]]
 
 
 * 用法
+运行gradle -b LogTrace-Plugin/deploy.gradle uploadArchives 发布
+** 用本地的仓库(参考LogTraceDemo)
 #+BEGIN_SRC build.gradle
 apply plugin: 'logtrace'
 
@@ -31,3 +34,68 @@ logtrace {
     compileTestJavas = [compileJava, compileTestJava]
 }
 #+END_SRC
+** 用远程仓库（参考LogTraceDemo-Remote-Repo）
+#+BEGIN_SRC build.gradle
+apply plugin: 'java'
+apply plugin: 'logtrace'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
+    }
+    dependencies {
+        classpath group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
+    }
+}
+
+logtrace {
+    enabled = true
+    compileJavas = [compileJava]
+    compileTestJavas = [compileTestJava]
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/junit/java','src/testng/java']
+        }
+        resources {
+            srcDirs = ['src/junit/resources']
+        }
+    }
+}
+
+dependencies {
+    compile group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.testng', name: 'testng', version: '6.9.9'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+}
+#+END_SRC
+
+* 参考：
+参考[[https://github.com/JakeWharton/hugo][JakeWharton/hugo]]
+* TODO
+** 在build.gradle中配置一个level来过滤log
