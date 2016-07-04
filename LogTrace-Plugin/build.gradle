@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
-apply plugin: 'maven'
 
 group = "com.logtrace"
 version = "1.0-SNAPSHOT"
@@ -66,11 +65,6 @@ test {
     //srcDirs ['src/junit/java']
 }
 
-
-uploadArchives {
-    repositories { flatDir { name 'localRepository' } }
-    repositories { localRepository { dirs '../local-repo' } }
-}
 
 def aspectj = { destDir, aspectPath, inpath, classpath ->
     ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",

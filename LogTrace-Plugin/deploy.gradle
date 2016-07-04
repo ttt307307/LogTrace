@@ -1,0 +1,16 @@
+apply from: '../build.gradle'
+apply from: 'build.gradle'
+
+apply plugin: 'maven'
+
+ext {
+    deployPath = file("E:/wsp/wsp_repo/mvn-repo")
+}
+
+uploadArchives {
+    repositories { flatDir { name 'localRepository' } }
+    repositories { localRepository { dirs '../local-repo' } }
+    repositories.mavenDeployer {
+        repository(url: "file://${deployPath.absolutePath}")
+    }
+}
