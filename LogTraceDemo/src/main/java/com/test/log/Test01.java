@@ -11,4 +11,22 @@ public class Test01 {
     public int add3(int a) {
         return a + 3;
     }
+
+    @LogTrace(level = 3)
+    public int test(Test2 t) {
+        return t.getA();
+    }
+
+
+}
+class Test2 {
+    int a;
+
+    public Test2(int a) {
+        this.a = a;
+    }
+
+    public int getA() {
+        return a;
+    }
 }

@@ -7,38 +7,24 @@ targetCompatibility = 1.8
 buildscript {
     repositories {
         jcenter()
-        mavenCentral()
-    }
-    repositories {
-        flatDir {
-            name 'localRepository'
-        }
-    }
-    repositories {
-        localRepository {
-            dirs '../local-repo'
-        }
+        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
     }
     dependencies {
         classpath group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
     }
 }
+
 allprojects {
     repositories {
         jcenter()
-        flatDir {
-            name 'localRepository'
-        }
-        localRepository {
-            dirs '../local-repo'
-        }
+        maven {url "https://raw.github.com/ttt307307/mvn-repo/master/"}
     }
 }
 
 logtrace {
     enabled = true
     compileJavas = [compileJava]
-    compileTestJavas = [compileJava, compileTestJava]
+    compileTestJavas = [compileTestJava]
 }
 
 
@@ -63,7 +49,6 @@ sourceSets {
 }
 
 dependencies {
-    //compile group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
     compile group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
