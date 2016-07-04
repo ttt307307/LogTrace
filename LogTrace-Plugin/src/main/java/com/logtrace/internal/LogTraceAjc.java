@@ -1,6 +1,7 @@
 package com.logtrace.internal;
 
 import com.logtrace.annotation.LogTrace;
+import com.logtrace.log.SysLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -166,7 +167,7 @@ public class LogTraceAjc {
 	}
 	
 	private static void log(int level,String message) {
-        System.out.println("level:" + level + ", message：" + message);
+        new SysLog().d(message);
 		switch (level) {
 		case 1:
 
