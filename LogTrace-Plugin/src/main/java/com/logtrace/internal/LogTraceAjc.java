@@ -1,7 +1,8 @@
 package com.logtrace.internal;
 
 import com.logtrace.annotation.LogTrace;
-import com.logtrace.log.SysLog;
+import com.logtrace.log.ILogTraceLog;
+import com.logtrace.log.LogManager;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -77,8 +78,7 @@ public class LogTraceAjc {
 
         builder.append(" [Thread:\"").append(Thread.currentThread().getName()).append("\"]");
 
-        log(level,asTag(cls) + " "  + builder.toString());
-        //LogUtils.log(asTag(cls), builder.toString());
+        log(level, cls, builder.toString());
 	}
 
 	private static void exitMethod(JoinPoint joinPoint, Object result, long lengthMillis) {
@@ -102,8 +102,7 @@ public class LogTraceAjc {
         	builder.append(Strings.toString(result));
         }
 
-        log(level,asTag(cls) + " "  + builder.toString());
-        //LogUtils.log(asTag(cls), builder.toString());
+        log(level, cls, builder.toString());
 	}
       
 	private static void enterConstructor(JoinPoint joinPoint) {
@@ -130,8 +129,7 @@ public class LogTraceAjc {
 
         builder.append(" [Thread:\"").append(Thread.currentThread().getName()).append("\"]");
 
-        log(level,asTag(cls) + " "  + builder.toString());
-        //LogUtils.log(asTag(cls), builder.toString());
+        log(level, cls, builder.toString());
 	}
 
 	private static void exitConstructor(JoinPoint joinPoint, Object result, long lengthMillis) {
@@ -155,37 +153,29 @@ public class LogTraceAjc {
         	builder.append(Strings.toString(result));
         }
 
-        log(level,asTag(cls) + " "  + builder.toString());
-        //LogUtils.log(asTag(cls), builder.toString());
+        log(level, cls, builder.toString());
 	}
 	
-	private static String asTag(Class<?> cls) {
-		if (cls.isAnonymousClass()) {
-			return asTag(cls.getEnclosingClass());
-		}
-		return cls.getSimpleName();
-	}
-	
-	private static void log(int level,String message) {
-        new SysLog().d(message);
+	private static void log(int level,Class<?> cls, String message) {
+        ILogTraceLog log = LogManager.getLogger();
 		switch (level) {
 		case 1:
-
+            log.t(cls, message);
 			break;
 		case 2:
-
+            log.d(cls, message);
 			break;
 		case 3:
-
+            log.i(cls, message);
 			break;
 		case 4:
-
+            log.w(cls, message);
 			break;
 		case 5:
-
+            log.e(cls, message);
 			break;
 		case 6:
-
+            log.f(cls, message);
 			break;
 		default:
 

@@ -6,7 +6,7 @@ package com.logtrace.log;
 public class SysLog implements ILogTraceLog {
     @Override
     public void t(Class clazz, String message) {
-        log("TRACE: " + clazz.getSimpleName() + ": " + message);
+        log("TRACE: " + asTag(clazz) + ": " + message);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class SysLog implements ILogTraceLog {
 
     @Override
     public void d(Class clazz, String message) {
-        log("DEBUG: " + clazz.getSimpleName() + ": " + message);
+        log("DEBUG: " + asTag(clazz) + ": " + message);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SysLog implements ILogTraceLog {
 
     @Override
     public void i(Class clazz, String message) {
-        log("INFO: " + clazz.getSimpleName() + ": " + message);
+        log("INFO: " + asTag(clazz) + ": " + message);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SysLog implements ILogTraceLog {
 
     @Override
     public void w(Class clazz, String message) {
-        log("WARN: " + clazz.getSimpleName() + ": " + message);
+        log("WARN: " + asTag(clazz) + ": " + message);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SysLog implements ILogTraceLog {
 
     @Override
     public void e(Class clazz, String message) {
-        log("ERROR: " + clazz.getSimpleName() + ": " + message);
+        log("ERROR: " + asTag(clazz) + ": " + message);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class SysLog implements ILogTraceLog {
 
     @Override
     public void f(Class clazz, String message) {
-        log("FATAL: " + clazz.getSimpleName() + ": " + message);
+        log("FATAL: " + asTag(clazz) + ": " + message);
     }
 
     @Override
@@ -96,5 +96,12 @@ public class SysLog implements ILogTraceLog {
 
     private void log(String message) {
         System.out.println(message);
+    }
+
+    private String asTag(Class<?> cls) {
+        if (cls.isAnonymousClass()) {
+            return asTag(cls.getEnclosingClass());
+        }
+        return cls.getSimpleName();
     }
 }

@@ -7,4 +7,5 @@ class LogTraceExtension {
     def enabled = true
     def compileJavas = []
     def compileTestJavas = []
+    def logTraceLog
 }
