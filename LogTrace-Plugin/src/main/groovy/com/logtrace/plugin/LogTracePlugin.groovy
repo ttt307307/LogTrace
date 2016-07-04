@@ -25,7 +25,7 @@ public class LogTracePlugin implements Plugin<Project> {
 
         project.dependencies {
             ajc "org.aspectj:aspectjtools:1.8.9"
-            compile "org.aspectj:aspectjweaver:1.8.9"
+//            compile "org.aspectj:aspectjweaver:1.8.9"
             ajtools "org.aspectj:aspectjtools:1.8.9"
             compile "org.aspectj:aspectjrt:1.8.9"
         }
