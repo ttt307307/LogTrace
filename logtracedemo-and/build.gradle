@@ -5,11 +5,6 @@ apply plugin: 'logtrace'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-
-logtrace {
-    enabled = false
-}
-
 buildscript {
     repositories {
         jcenter()
@@ -58,6 +53,10 @@ allprojects {
 //    }
 //}
 
+ext {
+    KEYSOTRE_PROPERTIES = './keystore/keystore.properties'
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -75,6 +74,29 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    signingConfigs {
+        def keyFile = file(KEYSOTRE_PROPERTIES)
+        Properties pKey = new Properties()
+        keyFile.withInputStream {stream ->
+            pKey.load(stream)
+        }
+        println pKey.KEY_STORE
+        myConfig {
+            storeFile file(pKey.KEY_STORE)
+            storePassword pKey.KEY_STORE_PASSWORD
+            keyAlias pKey.KEY_ALIAS
+            keyPassword pKey.KEY_ALIAS_PASSWORD
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig  signingConfigs.myConfig
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 dependencies {
@@ -85,4 +107,57 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile(group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT')
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
+
+logtrace {
+    enabled = true
+}
+
+
+final def variants = project.android.applicationVariants
+
+variants.all {variant ->
+    print "--->"
+    println variant.name
+    println variant.each{ t->
+        println t
+    }
+}
+
+project.android.applicationVariants.all { variant ->
+    variant.each {
+        logtrace.compileJavas.add(variant.javaCompile)
+    }
+}
+
+//project.android.libraryVariants.all { variant ->
+//    variant.each {
+//        logtrace.compileJavas.add(variant.javaCompile)
+//    }
+//}
+
+project.android.testVariants.all { variant ->
+    variant.each {
+        logtrace.compileTestJavas.add(variant.javaCompile)
+    }
 }
