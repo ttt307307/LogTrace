@@ -99,3 +99,4 @@ dependencies {
 参考[[https://github.com/JakeWharton/hugo][JakeWharton/hugo]]
 * TODO
 ** 在build.gradle中配置一个level来过滤log
+** 安卓闪退 java.lang.NoSuchMethodError: No virtual method getDeclaredAnnotation(Ljava/lang/Class;)Ljava/lang/annotation/Annotation; in class Ljava/lang/reflect/Method; or its super classes (declaration of 'java.lang.reflect.Method' appears in /system/framework/core-libart.jar)，可能和设置的jdk版本有关

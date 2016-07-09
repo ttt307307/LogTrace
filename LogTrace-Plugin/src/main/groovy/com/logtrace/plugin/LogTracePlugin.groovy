@@ -64,7 +64,7 @@ public class LogTracePlugin implements Plugin<Project> {
 //                            project.configurations.aspects.asPath,
 //                            project.sourceSets.main.output.classesDir.absolutePath,
 //                            project.sourceSets.main.runtimeClasspath.asPath
-                    aspectj project.sourceSets.main.output.classesDir.absolutePath,
+                    aspectj compileJava.destinationDir.toString(),
                             compileJava.classpath.asPath,
                             compileJava.destinationDir.toString(),
                             compileJava.classpath.asPath
@@ -82,7 +82,7 @@ public class LogTracePlugin implements Plugin<Project> {
 //                            project.configurations.aspects.asPath + project.jar.archivePath,
 //                            project.sourceSets.test.output.classesDir.absolutePath,
 //                            project.sourceSets.test.runtimeClasspath.asPath
-                    aspectj project.sourceSets.test.output.classesDir.absolutePath,
+                    aspectj compileJava.destinationDir.toString(),
                             compileJava.classpath.asPath,
                             compileJava.destinationDir.toString(),
                             compileJava.classpath.asPath

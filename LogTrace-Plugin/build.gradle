@@ -88,10 +88,14 @@ def aspectj = { destDir, aspectPath, inpath, classpath ->
 
 compileJava {
     doLast {
-        aspectj project.sourceSets.main.output.classesDir.absolutePath,
-                configurations.aspects.asPath,
-                project.sourceSets.main.output.classesDir.absolutePath,
-                project.sourceSets.main.runtimeClasspath.asPath
+//        aspectj project.sourceSets.main.output.classesDir.absolutePath,
+//                configurations.aspects.asPath,
+//                project.sourceSets.main.output.classesDir.absolutePath,
+//                project.sourceSets.main.runtimeClasspath.asPath
+        aspectj compileJava.destinationDir.toString(),
+                compileJava.classpath.asPath,
+                compileJava.destinationDir.toString(),
+                compileJava.classpath.asPath
     }
 }
 
@@ -99,9 +103,13 @@ compileTestJava {
     dependsOn jar
 
     doLast {
-        aspectj project.sourceSets.test.output.classesDir.absolutePath,
-                configurations.aspects.asPath + jar.archivePath,
-                project.sourceSets.test.output.classesDir.absolutePath,
-                project.sourceSets.test.runtimeClasspath.asPath
+//        aspectj project.sourceSets.test.output.classesDir.absolutePath,
+//                configurations.aspects.asPath + jar.archivePath,
+//                project.sourceSets.test.output.classesDir.absolutePath,
+//                project.sourceSets.test.runtimeClasspath.asPath
+        aspectj compileTestJava.destinationDir.toString(),
+                compileTestJava.classpath.asPath,
+                compileTestJava.destinationDir.toString(),
+                compileTestJava.classpath.asPath
     }
 }
