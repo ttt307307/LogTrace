@@ -1,6 +1,7 @@
 package com.test.log;
 
 
+import com.logtrace.annotation.LogTrace;
 import org.junit.Test;
 
 /**
@@ -13,4 +14,16 @@ public class Test01Test {
         target.add3(7);
     }
 
+    @Test
+    public void testLogtraceJunit() throws Exception {
+        LogtraceJunit target = new LogtraceJunit();
+        target.doubleX(7);
+    }
+
+    class LogtraceJunit {
+        @LogTrace(level = 3)
+        public int doubleX(int x) {
+            return x * 2;
+        }
+    }
 }
