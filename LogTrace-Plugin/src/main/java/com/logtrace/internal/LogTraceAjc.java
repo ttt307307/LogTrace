@@ -62,7 +62,7 @@ public class LogTraceAjc {
         String[] parameterNames = signature.getParameterNames();
         Object[] parameterValues = joinPoint.getArgs();
         
-        LogTrace annotation = signature.getMethod().getDeclaredAnnotation(LogTrace.class);
+        LogTrace annotation = signature.getMethod().getAnnotation(LogTrace.class);
         int level = annotation.level();
         
         StringBuilder builder = new StringBuilder("\u21E2 ");
@@ -113,7 +113,7 @@ public class LogTraceAjc {
         String[] parameterNames = signature.getParameterNames();
         Object[] parameterValues = joinPoint.getArgs();
         
-        LogTrace annotation = signature.getConstructor().getDeclaredAnnotation(LogTrace.class);
+        LogTrace annotation = (LogTrace) signature.getConstructor().getAnnotation(LogTrace.class);
         int level = annotation.level();
         
         StringBuilder builder = new StringBuilder("\u21E2 ");
@@ -139,7 +139,7 @@ public class LogTraceAjc {
         boolean hasReturnType = signature instanceof MethodSignature
             && ((MethodSignature) signature).getReturnType() != void.class;
 
-        LogTrace annotation = signature.getConstructor().getDeclaredAnnotation(LogTrace.class);
+        LogTrace annotation = (LogTrace) signature.getConstructor().getAnnotation(LogTrace.class);
         int level = annotation.level();
         
         StringBuilder builder = new StringBuilder("\u21E0 ")

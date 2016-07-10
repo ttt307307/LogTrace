@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        Log.d("ttt", new TestLogTrace().add5a("789"));
+        String a = new TestLogTrace().add5a("789");
+        Log.d("ttt", a);
     }
 
     @Override
