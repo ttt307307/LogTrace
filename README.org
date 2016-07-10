@@ -1,13 +1,13 @@
 #+TITLE:README.org
 
 * 介绍
-LogTrace插件，用java切入log
+LogTrace插件，用AspectJ切入log
 
 * 工程目录
-+ [[./LogTrace-Plugin][LogTrace-Plugin]]
-+ [[./LogTraceDemo][LogTraceDemo]]
-+ [[./LogTraceDemo-Remote-Repo][LogTraceDemo-Remote-Repo]]
-
++ [[./LogTrace-Plugin][LogTrace-Plugin]]                 插件
++ [[./LogTraceDemo][LogTraceDemo]]                    本地仓库 Demo工程
++ [[./LogTraceDemo-Remote-Repo][LogTraceDemo-Remote-Repo]]        远程仓库 Demo工程
++ [[./logtracedemo-and][logtracedemo-and]]                Android  Demo工程
 
 * 用法
 运行gradle -b LogTrace-Plugin/deploy.gradle uploadArchives 发布
@@ -95,8 +95,118 @@ dependencies {
 }
 #+END_SRC
 
+** Java工程
+Java工程参考 *LogTraceDemo* 和 *LogTraceDemo-Remote-Repo* 
+#+BEGIN_SRC build.gradle
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    repositories {
+        flatDir {
+            name 'localRepository'
+        }
+    }
+    repositories {
+        localRepository {
+            dirs '../local-repo'
+        }
+    }
+    dependencies {
+        classpath group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+    }
+}
+allprojects {
+    repositories {
+        jcenter()
+        flatDir {
+            name 'localRepository'
+        }
+        localRepository {
+            dirs '../local-repo'
+        }
+    }
+}
+
+logtrace {
+    enabled = true
+    compileJavas = [compileJava]
+    compileTestJavas = [compileJava, compileTestJava]
+}
+#+END_SRC
+** Android工程
+Android工程参考 *logtracedemo-and*
+#+BEGIN_SRC gradle
+apply plugin: 'com.android.application'
+
+apply plugin: 'logtrace'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    repositories {
+        flatDir {
+            name 'localRepository'
+        }
+    }
+    repositories {
+        localRepository {
+            dirs '../local-repo'
+        }
+    }
+    dependencies {
+        classpath group: 'com.logtrace', name: 'LogTrace-Plugin', version: '1.0-SNAPSHOT'
+    }
+}
+allprojects {
+    repositories {
+        jcenter()
+        flatDir {
+            name 'localRepository'
+        }
+        localRepository {
+            dirs '../local-repo'
+        }
+    }
+}
+logtrace {
+    enabled = true
+}
+
+//Application
+project.android.applicationVariants.all { variant ->
+    variant.each {
+        logtrace.compileJavas.add(variant.javaCompile)
+    }
+}
+
+//如果是Library
+//project.android.libraryVariants.all { variant ->
+//    variant.each {
+//        logtrace.compileJavas.add(variant.javaCompile)
+//    }
+//}
+
+project.android.testVariants.all { variant ->
+    variant.each {
+        logtrace.compileTestJavas.add(variant.javaCompile)
+    }
+}
+#+END_SRC
 * 参考：
 参考[[https://github.com/JakeWharton/hugo][JakeWharton/hugo]]
+
 * TODO
 ** 在build.gradle中配置一个level来过滤log
 ** 安卓闪退 java.lang.NoSuchMethodError: No virtual method getDeclaredAnnotation(Ljava/lang/Class;)Ljava/lang/annotation/Annotation; in class Ljava/lang/reflect/Method; or its super classes (declaration of 'java.lang.reflect.Method' appears in /system/framework/core-libart.jar)，可能和设置的jdk版本有关
+现在改为编译java文件的JDK版本为1.7
+
