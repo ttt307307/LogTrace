@@ -1,7 +1,20 @@
 #+TITLE:README.org
 
 * 介绍
-LogTrace插件，用AspectJ切入log
+LogTrace插件，用AspectJ切入log，
+#+BEGIN_SRC Test01.java
+...
+@LogTrace(level = 2)
+public int add3(int a) {
+    return a + 3;
+}
+...
+#+END_SRC
+结果如下：
+#+BEGIN_SAMPLE
+DEBUG: Test01: ⇢ add3(a=7) [Thread:"main"]
+DEBUG: Test01: ⇠ add3 [0ms] = 10
+#+END_SAMPLE
 
 * 工程目录
 + [[./LogTrace-Plugin][LogTrace-Plugin]]                 插件
@@ -205,8 +218,8 @@ project.android.testVariants.all { variant ->
 * 参考：
 参考[[https://github.com/JakeWharton/hugo][JakeWharton/hugo]]
 
-* TODO
-** 在build.gradle中配置一个level来过滤log
-** 安卓闪退 java.lang.NoSuchMethodError: No virtual method getDeclaredAnnotation(Ljava/lang/Class;)Ljava/lang/annotation/Annotation; in class Ljava/lang/reflect/Method; or its super classes (declaration of 'java.lang.reflect.Method' appears in /system/framework/core-libart.jar)，可能和设置的jdk版本有关
+* 问题（TODO）
+- 在build.gradle中配置一个level来过滤log
+- 安卓闪退 java.lang.NoSuchMethodError: No virtual method getDeclaredAnnotation(Ljava/lang/Class;)Ljava/lang/annotation/Annotation; in class Ljava/lang/reflect/Method; or its super classes (declaration of 'java.lang.reflect.Method' appears in /system/framework/core-libart.jar)，可能和设置的jdk版本有关
 现在改为编译java文件的JDK版本为1.7
 
